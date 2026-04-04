@@ -115,19 +115,21 @@ void show_static(const char* text, uint16_t duration_ms);
 void show_static(const char* text, uint16_t step_delay_ms);
 void show_static(const char* text, uint16_t total_duration_ms, uint16_t blink_interval_ms);
 
-/*
+
+//säker delay funktion
 void delay_ms_safe(uint16_t ms) {
     while (ms--) {
         _delay_ms(1);
     }
-}*/
+}
+
 
 //visar statisk text, implementera statisk läge
 void show_static(const char* text, uint16_t duration_ms){
     lcd.clear();
     lcd_set_cursor(0,0);
     lcd_print(text);
-    _delay_ms(duration_ms);
+    _delay_ms_safe(duration_ms); //använder säkra funktionen
 }
 
 
