@@ -2,6 +2,51 @@
 
 ## Part 2
 
+#### 2.3 Implementera scroll-läge + helper finktion
+
+```C
+//helper funktion för att räkna längden på en string
+uint8_t string_length(const char* str) {
+    uint8_t len = 0;
+    while (str[len] != '\0') {
+        len++;
+    }
+    return len;
+}
+
+//visar scrollande text, implementera scrollande läge
+void show_scroll(const char* text, uint16_t step_delay_ms) {
+    uint8_t len = string_length(text);
+
+    if (len <= 16) {
+        show_static(text, 2000);
+        return;
+    }
+
+    for (uint8_t start = 0; start <= len - 16; start++) {
+        lcd_clear();
+        lcd_set_cursor(0,0);
+
+        for (uint8_t i = 0; i < 16; i++) {
+            lcd_data(text[start + i]);
+        }
+
+        delay_ms_safe(step_delay_ms);
+    }
+}
+```
+Testar scroll lägen
+```C
+ //loop som visar olika annonser vid olika lägen
+    while (1) {
+       show_static("Static Test", 2000); //statisk
+       show_static("It Works!", 2000); //statisk
+
+       show_scroll("Buy a car from Harry", 300); //scrollande
+    }
+
+```
+
 #### 2.2 Säker delay funktion + Testa statisk läge
 
 ```C
