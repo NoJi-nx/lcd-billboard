@@ -2,7 +2,7 @@
 
 ## Part 2
 
-#### 2.2 Säker delay funktion
+#### 2.2 Säker delay funktion + Testa statisk läge
 
 ```C
 //säker delay funktion
@@ -15,25 +15,38 @@ void delay_ms_safe(uint16_t ms) {
 
 //visar statisk text, implementera statisk läge
 void show_static(const char* text, uint16_t duration_ms){
-    lcd.clear();
+    lcd_clear();
     lcd_set_cursor(0,0);
     lcd_print(text);
-    _delay_ms_safe(duration_ms); //använder säkra funktionen
+    delay_ms_safe(duration_ms); //använder säkra funktionen
 }
 
+
 ```
+
+Testar Statisk läge
+
+```C
+    //loop som visar olika annonser
+    while (1) {
+       show_static("Static Test", 2000);
+       show_static("It Works!", 2000);
+    }
+``` 
+
 
 #### 2.1 Display funktioner + statisk läge
 
 ```C
 //display funktioner
 void show_static(const char* text, uint16_t duration_ms);
-void show_static(const char* text, uint16_t step_delay_ms);
-void show_static(const char* text, uint16_t total_duration_ms, uint16_t blink_interval_ms);
+void show_scroll(const char* text, uint16_t step_delay_ms);
+void show_blink(const char* text, uint16_t total_duration_ms, uint16_t blink_interval_ms);
+
 
 //visar statisk text, implementera statisk läge
 void show_static(const char* text, uint16_t duration_ms){
-    lcd.clear();
+    lcd_clear();
     lcd_set_cursor(0,0);
     lcd_print(text);
     _delay_ms(duration_ms);

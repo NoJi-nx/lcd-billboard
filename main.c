@@ -112,8 +112,10 @@ void lcd_clear() {
 
 //display funktioner
 void show_static(const char* text, uint16_t duration_ms);
-void show_static(const char* text, uint16_t step_delay_ms);
-void show_static(const char* text, uint16_t total_duration_ms, uint16_t blink_interval_ms);
+void show_scroll(const char* text, uint16_t step_delay_ms);
+void show_blink(const char* text, uint16_t total_duration_ms, uint16_t blink_interval_ms);
+
+
 
 
 //säker delay funktion
@@ -126,10 +128,10 @@ void delay_ms_safe(uint16_t ms) {
 
 //visar statisk text, implementera statisk läge
 void show_static(const char* text, uint16_t duration_ms){
-    lcd.clear();
+    lcd_clear();
     lcd_set_cursor(0,0);
     lcd_print(text);
-    _delay_ms_safe(duration_ms); //använder säkra funktionen
+    delay_ms_safe(duration_ms); //använder säkra funktionen
 }
 
 
@@ -149,12 +151,7 @@ int main(void) {
 
     //loop som visar olika annonser
     while (1) {
-        lcd_clear();
-        lcd_print("Ad 1");
-        _delay_ms(2000);
-
-        lcd_clear();
-        lcd_print("Ad 2");
-        _delay_ms(2000);
+       show_static("Static Test", 2000);
+       show_static("It Works!", 2000);
     }
 }
