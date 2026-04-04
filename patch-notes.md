@@ -1,5 +1,24 @@
 # Patch- Notes
 
+## Part 3
+
+#### 3.1 Enum för visning & regel
+```C
+//display läge enum, hantera olika visningslägen
+typedef enum {
+    MODE_STATIC,
+    MODE_SCROLL,
+    MODE_BLINK
+} DisplayMode;
+
+//regel enum, växla mellan olika lägen
+typedef enum {
+    RULE_NONE,
+    RULE_EVEN_MINUTE,
+    RULE_ODD_MINUTE
+} RuleTy
+```
+
 ## Part 2
 
 #### 2.5 Testar + mixar display funktioner

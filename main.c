@@ -110,12 +110,10 @@ void lcd_clear() {
     _delay_ms(2);
 }
 
-//display funktioner
+//display funktion deklarationer
 void show_static(const char* text, uint16_t duration_ms);
 void show_scroll(const char* text, uint16_t step_delay_ms);
 void show_blink(const char* text, uint16_t total_duration_ms, uint16_t blink_interval_ms);
-
-
 
 
 //säker delay funktion
@@ -183,7 +181,19 @@ void show_blink(const char* text, uint16_t total_duration_ms, uint16_t blink_int
     }
 }
 
+//display läge enum, hantera olika visningslägen
+typedef enum {
+    MODE_STATIC,
+    MODE_SCROLL,
+    MODE_BLINK
+} DisplayMode;
 
+//regel enum, växla mellan olika lägen
+typedef enum {
+    RULE_NONE,
+    RULE_EVEN_MINUTE,
+    RULE_ODD_MINUTE
+} RuleType;
 
 //main funktionen
 int main(void) {
@@ -202,7 +212,7 @@ int main(void) {
     while (1) {
        show_static("Static Demo", 2000);
        show_scroll("This is scrolling text on LCD", 250);
-       show_blink("Blink Demo", 3000, 400)
+       show_blink("Blink Demo", 3000, 400);
 
     }
 }
