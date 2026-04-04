@@ -2,6 +2,42 @@
 
 ## Part 2
 
+#### 2.4 Implementerar blink läge
+```C
+//visar blinkande text, implementera blinkande läge
+void show_blink(const char* text, uint16_t total_duration_ms, uint16_t blink_interval_ms) {
+    uint16_t elapsed = 0;
+
+    while (elapsed < total_duration_ms) {
+        lcd_clear();
+        lcd_set_cursor(0,0);
+        lcd_print(text);
+        delay_ms_safe(blink_interval_ms);
+        elapsed += blink_interval_ms;
+
+        if (elapsed >= total_duration_ms) break;
+
+        lcd_clear();
+        delay_ms_safe(blink_interval_ms);
+        elapsed += blink_interval_ms;
+    }
+}
+```
+
+Testar blinkande läge
+```C
+//loop som visar olika annonser vid olika lägen
+    while (1) {
+       show_static("Static Test", 2000); //statisk
+       show_static("It Works!", 2000); //statisk
+
+       show_scroll("Buy a car from Harry", 300); //scrollande
+
+       show_blink("Harry Cars", 3000, 500); //blinkande
+    }
+```
+
+
 #### 2.3 Implementera scroll-läge + helper finktion
 
 ```C
@@ -35,6 +71,7 @@ void show_scroll(const char* text, uint16_t step_delay_ms) {
     }
 }
 ```
+
 Testar scroll lägen
 ```C
  //loop som visar olika annonser vid olika lägen
