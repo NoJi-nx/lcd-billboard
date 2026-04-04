@@ -2,6 +2,18 @@
 
 ## Part 2
 
+#### 2.5 Testar + mixar display funktioner
+
+```C
+  //loop som visar olika annonser vid olika lägen
+    while (1) {
+       show_static("Static Demo", 2000);
+       show_scroll("This is scrolling text on LCD", 250);
+       show_blink("Blink Demo", 3000, 400)
+
+    }
+```
+
 #### 2.4 Implementerar blink läge
 ```C
 //visar blinkande text, implementera blinkande läge
@@ -28,11 +40,6 @@ Testar blinkande läge
 ```C
 //loop som visar olika annonser vid olika lägen
     while (1) {
-       show_static("Static Test", 2000); //statisk
-       show_static("It Works!", 2000); //statisk
-
-       show_scroll("Buy a car from Harry", 300); //scrollande
-
        show_blink("Harry Cars", 3000, 500); //blinkande
     }
 ```
@@ -76,9 +83,6 @@ Testar scroll lägen
 ```C
  //loop som visar olika annonser vid olika lägen
     while (1) {
-       show_static("Static Test", 2000); //statisk
-       show_static("It Works!", 2000); //statisk
-
        show_scroll("Buy a car from Harry", 300); //scrollande
     }
 

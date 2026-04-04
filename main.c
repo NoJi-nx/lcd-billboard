@@ -200,11 +200,9 @@ int main(void) {
 
     //loop som visar olika annonser vid olika lägen
     while (1) {
-       show_static("Static Test", 2000); //statisk
-       show_static("It Works!", 2000); //statisk
+       show_static("Static Demo", 2000);
+       show_scroll("This is scrolling text on LCD", 250);
+       show_blink("Blink Demo", 3000, 400)
 
-       show_scroll("Buy a car from Harry", 300); //scrollande
-
-       show_blink("Harry Cars", 3000, 500); //blinkande
     }
 }
