@@ -1,5 +1,33 @@
 # Patch- Notes
 
+## Part 4
+
+#### 4.1 Variabler för växling + helper delay funktion
+
+```C
+//hålla koll på tiden för att växla annonser
+int8_t current_customer_index = 0;
+int8_t last_customer_index = -1;
+
+
+//main funktionen
+int main(void) {
+    //setup
+    lcd_pins_init();
+    lcd_init();
+
+    //text som visar på LCD
+    lcd_print("Billboard");
+    lcd_set_cursor(0,1);
+    lcd_print("Online");
+
+    //delay innan annonser börjar visas
+    void wait_slot_20s() {
+        delay_ms_safe(20000);
+    }
+```
+
+
 ## Part 3
 
 #### 3.4 Helper funktion för visningsläge

@@ -274,6 +274,11 @@ uint8_t ad_rule_matches(const Ad* ad, uint8_t is_even_minute) {
     return 0; 
 }
 
+//hålla koll på tiden för att växla annonser
+int8_t current_customer_index = 0;
+int8_t last_customer_index = -1;
+
+
 //main funktionen
 int main(void) {
     //setup
@@ -284,7 +289,11 @@ int main(void) {
     lcd_print("Billboard");
     lcd_set_cursor(0,1);
     lcd_print("Online");
-    _delay_ms(2000);
+
+    //delay innan annonser börjar visas
+    void wait_slot_20s() {
+        delay_ms_safe(20000);
+    }
 
 
     //loop som visar olika annonser vid olika lägen
