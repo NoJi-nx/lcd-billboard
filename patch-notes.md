@@ -3,6 +3,7 @@
 ## Part 3
 
 #### 3.1 Enum för visning & regel
+
 ```C
 //display läge enum, hantera olika visningslägen
 typedef enum {
@@ -16,7 +17,7 @@ typedef enum {
     RULE_NONE,
     RULE_EVEN_MINUTE,
     RULE_ODD_MINUTE
-} RuleTy
+} RuleType;
 ```
 
 ## Part 2
