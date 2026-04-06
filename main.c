@@ -278,6 +278,16 @@ uint8_t ad_rule_matches(const Ad* ad, uint8_t is_even_minute) {
 int8_t current_customer_index = 0;
 int8_t last_customer_index = -1;
 
+//helper funktion, få första annonsen för en kund
+Ad* get_first_ad_for_customer(Customer* customer) {
+    return &customer->ads[0];
+}
+
+//funkion, visar annons för en kund baserat på kundslot
+void run_customer_slot(uint8_t customer_index) {
+    Ad* ad = get_first_ad_for_customer(&customers[customer_index]);
+    show_ad(ad)
+}
 
 //main funktionen
 int main(void) {
