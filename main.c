@@ -212,40 +212,40 @@ typedef struct {
 
 //exempeldata för annonser
 Ad harry_ads[] = {
-    {"Buy a car from Harry", MODE_SCROLL, RULE_NONE},
-    {"A good car deal", MODE_STATIC, RULE_NONE},
-    {"Honest Harry Cars", MODE_BLINK, RULE_NONE}
+    {"Köp bil hos Harry", MODE_SCROLL, RULE_NONE},
+    {"En god bilaffär (för Harry!)", MODE_STATIC, RULE_NONE},
+    {"Hederlige Harrys Bilar", MODE_BLINK, RULE_NONE}
 
 };
 
 Ad grandma_ads[] = {
-    {"Buy a pie from Grandma", MODE_SCROLL, RULE_NONE},
-    {"Hurry before Marten eats", MODE_STATIC, RULE_NONE}
+    {"Köp paj hos Farmor Anka", MODE_SCROLL, RULE_NONE},
+    {"Skynda innan Mårten ätit alla pajer", MODE_STATIC, RULE_NONE}
 };
 
-Ad peter_ads[] = {
-    {"Let Peter build", MODE_SCROLL, RULE_EVEN_MINUTE},
-    {"Build black? Call", MODE_STATIC, RULE_ODD_MINUTE}
+Ad petter_ads[] = {
+    {"Låt Petter bygga åt dig", MODE_SCROLL, RULE_EVEN_MINUTE},
+    {"Bygga svart? Ring Petter", MODE_STATIC, RULE_ODD_MINUTE}
 
 };
 
 Ad goofy_ads[] = {
-    {"Mysteries? Call Goofy", MODE_STATIC, RULE_EVEN_MINUTE},
-    {"Goofy gets it done", MODE_STATIC, RULE_ODD_MINUTE}
+    {"Mysterier? Ring Långben", MODE_STATIC, RULE_NONE},
+    {"Långben fixar biffen", MODE_STATIC, RULE_NONE}
 
 };
 
-Ad house_ads[] = {
-    {"Advertise here! IOT", MODE_STATIC, RULE_NONE}
+Ad commercial_ads[] = {
+    {"Synas här? IOT:s Reklambyrå", MODE_STATIC, RULE_NONE}
 };
 
 //skapar kunder och deras annonser
 Customer customers [] = {
-    {"Harry", 5000, harry_ads, 3},
-    {"Grandma Duck", 3000, grandma_ads, 2},
-    {"Black Peter", 15000, peter_ads, 2},
-    {"Goofy", 4000, goofy_ads, 2},
-    {"House Ad", 1000, house_ads, 1}
+    {"Harrys bilar", 5000, harry_ads, 3},
+    {"Farmor Anka", 3000, grandma_ads, 2},
+    {"Petter Svartbyggen", 1500, petter_ads, 2},
+    {"Långbens detektivbyrå", 4000, goofy_ads, 2},
+    {"Reklambyrå", 1000, commercial_ads, 1}
 };
 
 //räknar antal kunder
@@ -264,6 +264,14 @@ void show_ad(const Ad* ad) {
             show_blink(ad->text, 5000, 500);
             break;
     }
+}
+
+//kontrollerar om annonsen matchar regler
+uint8_t ad_rule_matches(const Ad* ad, uint8_t is_even_minute) {
+    if (ad->rule == RULE_NONE) return 1;
+    if (ad->rule == RULE_EVEN_MINUTE && is_even_minute) return 1;
+    if (ad->rule == RULE_ODD_MINUTE && !is_even_minute) return 1;
+    return 0; 
 }
 
 //main funktionen
@@ -288,9 +296,12 @@ int main(void) {
        show_ad(&customers[1].ads[0]);
        show_ad(&customers[1].ads[1]);
 
+       show_ad(&customers[2].ads[0]);
+       show_ad(&customers[2].ads[1]);
+
        show_ad(&customers[3].ads[0]);
+       show_ad(&customers[3].ads[1]);
+
        show_ad(&customers[4].ads[0]);
-
-
     }
 }
