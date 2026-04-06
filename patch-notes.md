@@ -2,6 +2,26 @@
 
 ## Part 3
 
+#### 3.2 3.2 Struktur för kunder och annonser
+
+```C
+//annons struktur, hantera annonsdata
+typedef struct {
+    const char* text;
+    DisplayedMode mode;
+    RuleType rule;
+} Ad;
+
+//kund struktur, hantera kunddata och deras annonser
+typedef struct {
+    const char* name;
+    uint16_t weight;
+    Ad* ads;
+    uint8_t ad_count;
+} Customer;
+
+```
+
 #### 3.1 Enum för visning & regel
 
 ```C
