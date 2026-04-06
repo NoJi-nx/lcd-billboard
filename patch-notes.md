@@ -2,7 +2,7 @@
 
 ## Part 3
 
-#### 3.3 Skapar kunder och annonser + räkna ut antalen
+#### 3.3 Skapar kunder & annonser + räkna ut antalen och testar data
 
 ```C
 //exempeldata för annonser
@@ -46,6 +46,17 @@ Customer customers [] = {
 //räknar antal kunder
 const uint8_t customer_count = sizeof(customers) / sizeof(customers[0]);
 
+```
+
+```C
+/loop som visar olika annonser vid olika lägen
+    while (1) {
+       show_scroll(customers[0].ads[0].text, 2000);
+       show_scroll(customers[1].ads[0].text, 2000);
+       show_static(customers[2].ads[0].text, 2000);
+
+
+    }
 ```
 
 #### 3.2 3.2 Struktur för kunder och annonser

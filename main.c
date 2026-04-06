@@ -251,6 +251,20 @@ Customer customers [] = {
 //räknar antal kunder
 const uint8_t customer_count = sizeof(customers) / sizeof(customers[0]);
 
+void show_ad(const Ad* ad) {
+    switch (ad->mode) {
+        case MODE_STATIC:
+            show__static(ad->text, 2000);
+            break;
+        case MODE_SCROLL:
+            show_scroll(ad->text, 200);
+            break;
+        case MODE_BLINK:
+            show_blink(ad->text, 5000, 500);
+            break;
+    }
+}
+
 //main funktionen
 int main(void) {
     //setup
@@ -266,9 +280,10 @@ int main(void) {
 
     //loop som visar olika annonser vid olika lägen
     while (1) {
-       show_static("Static Demo", 2000);
-       show_scroll("This is scrolling text on LCD", 250);
-       show_blink("Blink Demo", 3000, 400);
+       show_scroll(customers[0].ads[0].text, 2000);
+       show_scroll(customers[1].ads[0].text, 2000);
+       show_static(customers[2].ads[0].text, 2000);
+
 
     }
 }
