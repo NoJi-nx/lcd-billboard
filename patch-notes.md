@@ -2,6 +2,23 @@
 
 ## Part 4
 
+#### 4.4 Ny scheduler funktion för steg i schemaläggning + main uppdatering
+```C
+//scheduler funktion för steg, växla mellan kunder och annonser
+void run_scheduler_step() {
+    run_customer_slot(current_customer_index);
+    last_customer_index = current_customer_index;
+    current_customer_index = get_next_customer_index(current_customer_index);
+}
+```
+
+```C
+//loop som visar kunder och annonser i schemaläggning
+    while (1) {
+      run_scheduler_step();
+    }
+```
+
 #### 4.3 Scheduler funktion för växling baserat på tid + main uppdatering
 
 ```C

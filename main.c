@@ -278,6 +278,7 @@ uint8_t ad_rule_matches(const Ad* ad, uint8_t is_even_minute) {
 int8_t current_customer_index = 0;
 int8_t last_customer_index = -1;
 
+//vänta i 20 sekunder innan nästa annons visas
 void wait_slot_20s() {
     delay_ms_safe(20000);
 }
@@ -287,16 +288,24 @@ Ad* get_first_ad_for_customer(Customer* customer) {
     return &customer->ads[0];
 }
 
-//funkion, visar annons för en kund baserat på kundslot
-void run_customer_slot(uint8_t customer_index) {
-    Ad* ad = get_first_ad_for_customer(&customers[customer_index]);
-    show_ad(ad)
-    wait_slot_20s();
-}
 
 //scheduler funktion, växla mellan kunder baserat på tid
 uint8_t get_next_customer_index(uint8_t current_index) {
     return (current_index + 1) % customer_count;
+}
+
+//funkion, visar annons för en kund baserat på kundslot
+void run_customer_slot(uint8_t customer_index) {
+    Ad* ad = get_first_ad_for_customer(&customers[customer_index]);
+    show_ad(ad);
+    wait_slot_20s();
+}
+
+//scheduler funktion för steg, växla mellan kunder och annonser
+void run_scheduler_step() {
+    run_customer_slot(current_customer_index);
+    last_customer_index = current_customer_index;
+    current_customer_index = get_next_customer_index(current_customer_index);
 }
 
 //main funktionen
@@ -312,11 +321,8 @@ int main(void) {
     delay_ms_safe(2000);
 
 
-    //loop som växlar mellan kunder och visar deras annonser
+    //loop som visar kunder och annonser i schemaläggning
     while (1) {
-       run_customer_slot(current_customer_index);
-
-       last_customer_index = current_customer_index;
-       current_customer_index = get_next_customer_index(current_customer_index);
+      run_scheduler_step();
     }
 }
