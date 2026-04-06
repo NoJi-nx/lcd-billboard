@@ -2,6 +2,52 @@
 
 ## Part 3
 
+#### 3.3 Skapar kunder och annonser + räkna ut antalen
+
+```C
+//exempeldata för annonser
+Ad harry_ads[] = {
+    {"Buy a car from Harry", MODE_SCROLL, RULE_NONE},
+    {"A good car deal", MODE_STATIC, RULE_NONE},
+    {"Honest Harrry Cars", MODE_BLINK, RULE_NONE}
+
+};
+
+Ad grandma_ads[] = {
+    {"Buy a pie from Grandma", MODE_SCROLL, RULE_NONE},
+    {"Hurry before Marten eats", MODE_STATIC, RULE_NONE}
+};
+
+Ad peter_ads[] = {
+    {"Let Peter build", MODE_SCROLL, RULE_EVEN_MINUTE},
+    {"Build black? Call", MODE_STATIC, RULE_ODD_MINUTE}
+
+};
+
+Ad goofy_ads[] = {
+    {"Mysteries? Call Goofy", MODE_STATIC, RULE_EVEN_MINUTE},
+    {"Goofy gets it done", MODE_STATIC, RULE_ODD_MINUTE}
+
+};
+
+Ad house_ads[] = {
+    {"Advertise here! IOT", MODE_STATIC, RULE_NONE}
+};
+
+//skapar kunder och deras annonser
+Customer customers [] = {
+    {"Harry", 5000, harry_ads, 3},
+    {"Grandma Duck", 3000, grandma_ads, 2},
+    {"Black Peter", 15000, peter_ads, 2},
+    {"Goofy", 4000, goofy_ads, 2},
+    {"House Ad", 1000, house_ads, 1}
+};
+
+//räknar antal kunder
+const uint8_t customer_count = sizeof(customers) / sizeof(customers[0]);
+
+```
+
 #### 3.2 3.2 Struktur för kunder och annonser
 
 ```C
