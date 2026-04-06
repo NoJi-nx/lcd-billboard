@@ -2,6 +2,28 @@
 
 ## Part 4
 
+#### 4.3 Scheduler funktion för växling baserat på tid + main uppdatering
+
+```C
+//scheduler funktion, växla mellan kunder baserat på tid
+uint8_t get_next_customer_index(uint8_t current_index) {
+    return (current_index + 1) % customer_count;
+}
+
+```
+
+```C
+ //loop som växlar mellan kunder och visar deras annonser
+    while (1) {
+       run_customer_slot(current_customer_index);
+
+       last_customer_index = current_customer_index;
+       current_customer_index = get_next_customer_index(current_customer_index);
+    }
+```
+
+
+
 #### 4.2 Helper funktion för välja kund + kundslot implementation
 
 ```C
@@ -14,6 +36,7 @@ Ad* get_first_ad_for_customer(Customer* customer) {
 void run_customer_slot(uint8_t customer_index) {
     Ad* ad = get_first_ad_for_customer(&customers[customer_index]);
     show_ad(ad)
+
 }
 ```
 
@@ -25,22 +48,10 @@ int8_t current_customer_index = 0;
 int8_t last_customer_index = -1;
 
 
-//main funktionen
-int main(void) {
-    //setup
-    lcd_pins_init();
-    lcd_init();
-
-    //text som visar på LCD
-    lcd_print("Billboard");
-    lcd_set_cursor(0,1);
-    lcd_print("Online");
-
-    //delay innan annonser börjar visas
+//delay innan annonser börjar visas
     void wait_slot_20s() {
         delay_ms_safe(20000);
     }
-```
 
 
 ## Part 3

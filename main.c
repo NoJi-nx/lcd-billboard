@@ -278,6 +278,10 @@ uint8_t ad_rule_matches(const Ad* ad, uint8_t is_even_minute) {
 int8_t current_customer_index = 0;
 int8_t last_customer_index = -1;
 
+void wait_slot_20s() {
+    delay_ms_safe(20000);
+}
+
 //helper funktion, få första annonsen för en kund
 Ad* get_first_ad_for_customer(Customer* customer) {
     return &customer->ads[0];
@@ -287,6 +291,12 @@ Ad* get_first_ad_for_customer(Customer* customer) {
 void run_customer_slot(uint8_t customer_index) {
     Ad* ad = get_first_ad_for_customer(&customers[customer_index]);
     show_ad(ad)
+    wait_slot_20s();
+}
+
+//scheduler funktion, växla mellan kunder baserat på tid
+uint8_t get_next_customer_index(uint8_t current_index) {
+    return (current_index + 1) % customer_count;
 }
 
 //main funktionen
@@ -299,28 +309,14 @@ int main(void) {
     lcd_print("Billboard");
     lcd_set_cursor(0,1);
     lcd_print("Online");
-
-    //delay innan annonser börjar visas
-    void wait_slot_20s() {
-        delay_ms_safe(20000);
-    }
+    delay_ms_safe(2000);
 
 
-    //loop som visar olika annonser vid olika lägen
+    //loop som växlar mellan kunder och visar deras annonser
     while (1) {
-       show_ad(&customers[0].ads[0]);
-       show_ad(&customers[0].ads[1]);
-       show_ad(&customers[0].ads[2]);
+       run_customer_slot(current_customer_index);
 
-       show_ad(&customers[1].ads[0]);
-       show_ad(&customers[1].ads[1]);
-
-       show_ad(&customers[2].ads[0]);
-       show_ad(&customers[2].ads[1]);
-
-       show_ad(&customers[3].ads[0]);
-       show_ad(&customers[3].ads[1]);
-
-       show_ad(&customers[4].ads[0]);
+       last_customer_index = current_customer_index;
+       current_customer_index = get_next_customer_index(current_customer_index);
     }
 }
