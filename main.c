@@ -214,7 +214,7 @@ typedef struct {
 Ad harry_ads[] = {
     {"Buy a car from Harry", MODE_SCROLL, RULE_NONE},
     {"A good car deal", MODE_STATIC, RULE_NONE},
-    {"Honest Harrry Cars", MODE_BLINK, RULE_NONE}
+    {"Honest Harry Cars", MODE_BLINK, RULE_NONE}
 
 };
 
@@ -251,10 +251,11 @@ Customer customers [] = {
 //räknar antal kunder
 const uint8_t customer_count = sizeof(customers) / sizeof(customers[0]);
 
+//visar annons baserat på dess visning
 void show_ad(const Ad* ad) {
     switch (ad->mode) {
         case MODE_STATIC:
-            show__static(ad->text, 2000);
+            show_static(ad->text, 2000);
             break;
         case MODE_SCROLL:
             show_scroll(ad->text, 200);
@@ -280,9 +281,15 @@ int main(void) {
 
     //loop som visar olika annonser vid olika lägen
     while (1) {
-       show_scroll(customers[0].ads[0].text, 2000);
-       show_scroll(customers[1].ads[0].text, 2000);
-       show_static(customers[2].ads[0].text, 2000);
+       show_ad(&customers[0].ads[0]);
+       show_ad(&customers[0].ads[1]);
+       show_ad(&customers[0].ads[2]);
+
+       show_ad(&customers[1].ads[0]);
+       show_ad(&customers[1].ads[1]);
+
+       show_ad(&customers[3].ads[0]);
+       show_ad(&customers[4].ads[0]);
 
 
     }

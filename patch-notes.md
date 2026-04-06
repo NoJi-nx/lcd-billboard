@@ -2,6 +2,24 @@
 
 ## Part 3
 
+#### 3.4 Helper funktion för visningsläge
+```C
+//visar annons baserat på dess visning
+void show_ad(const Ad* ad) {
+    switch (ad->mode) {
+        case MODE_STATIC:
+            show_static(ad->text, 2000);
+            break;
+        case MODE_SCROLL:
+            show_scroll(ad->text, 200);
+            break;
+        case MODE_BLINK:
+            show_blink(ad->text, 5000, 500);
+            break;
+    }
+}
+```
+
 #### 3.3 Skapar kunder & annonser + räkna ut antalen och testar data
 
 ```C
