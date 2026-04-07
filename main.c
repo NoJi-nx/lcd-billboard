@@ -12,6 +12,12 @@
 #define LCD_D7 PD7
 
 
+#define CUSTOMER_NAME_TIME_MS 1000
+#define SLOT_TIME_MS 20000    
+#define SCROLL_STEP_MS 200
+#define BLINK_INTERVAL_MS 500
+
+
 
 //sätter LCD pins som outputs
 void lcd_pins_init() {
@@ -261,37 +267,13 @@ void show_ad(const Ad* ad, uint16_t slot_ms) {
             show_static(ad->text, slot_ms);
             break;
         case MODE_SCROLL:
-            show_scroll_for_slot(ad->text, slot_ms, 200);
+            show_scroll_for_slot(ad->text, slot_ms, SCROLL_STEP_MS);
             break;
         case MODE_BLINK:
-            show_blink(ad->text, slot_ms, 500);
+            show_blink(ad->text, slot_ms, BLINK_INTERVAL_MS);
             break;
     }
 
-
-/*
-
-    if (len <= 16) {
-        show_static(text, slot_ms);
-        return;
-    }
-
-    uint16_t elapsed = 0;
-    uint8_t start = 0;
-
-    while (elapsed < slot_ms) {
-        lcd_clear();
-        lcd_set_cursor(0,0);
-
-        for (uint8_t i = 0; i < 16; i++) {
-            lcd_data(text[(start + i) % len]);
-        }
-
-        delay_ms_safe(step_delay_ms);
-        elapsed += step_delay_ms;
-        start++;
-    }
-        */
 }
 
 //kontrollerar om annonsen matchar regler
@@ -307,15 +289,7 @@ int8_t current_customer_index = 0;
 int8_t last_customer_index = -1;
 
 
-
-
-
-/*// växla mellan kunder baserat på tid
-uint8_t get_next_customer_index(uint8_t current_index) {
-    return (current_index + 1) % customer_count;
-}
-*/
-
+//minutkontroll om det är jämn eller ojämn, sedan växlar annons
 uint8_t is_even_minute_for_slot() {
     static uint16_t slot_counter = 0;
     uint8_t is_even = ((slot_counter / 3) % 2 == 0);
@@ -323,7 +297,8 @@ uint8_t is_even_minute_for_slot() {
     return is_even;
 }
 
-uint8_t count_valid_Ads(Customer * customer, uint8_t is_even_minute) {
+//räknar antal annonser för reglerna för en kund
+uint8_t count_valid_ads(Customer * customer, uint8_t is_even_minute) {
     uint8_t count = 0;
 
     for (uint8_t i = 0;i < customer->ad_count; i++) {
@@ -335,8 +310,9 @@ uint8_t count_valid_Ads(Customer * customer, uint8_t is_even_minute) {
     return count;
 }
 
+//plockar en annons för kunden baserat på regler och viktad randomisering
 Ad* pick_ad_for_customer(Customer * customer, uint8_t is_even_minute) {
-    uint8_t valid_count = count_valid_Ads(customer, is_even_minute);
+    uint8_t valid_count = count_valid_ads(customer, is_even_minute);
 
     if (valid_count == 0) {
         return &customer->ads[0]; // ingen giltig annons
@@ -363,13 +339,13 @@ void run_customer_slot(uint8_t customer_index) {
     lcd_clear();
     lcd_set_cursor(0, 0);
     lcd_print(customers[customer_index].name);
-    delay_ms_safe(3000);
+    delay_ms_safe(CUSTOMER_NAME_TIME_MS);
     
     uint8_t is_even_minute = is_even_minute_for_slot();
     //visar annonsen för kunden
     Ad* ad = pick_ad_for_customer(&customers[customer_index], is_even_minute);
     
-    show_ad(ad, 5000);
+    show_ad(ad, SLOT_TIME_MS);
 }
 
 
@@ -383,6 +359,7 @@ uint8_t get_total_weight() {
 }
 //plockar kund baserat på viktad randomisering
 uint8_t pick_weighted_customer() {
+    if (customer_count == 0) return 0; // ingen kund
     uint8_t total_weight = get_total_weight();
     uint8_t r = rand() % total_weight;
 
