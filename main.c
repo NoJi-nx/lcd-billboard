@@ -117,6 +117,7 @@ void show_scroll(const char* text, uint16_t step_delay_ms);
 void show_blink(const char* text, uint16_t total_duration_ms, uint16_t blink_interval_ms);
 
 
+
 //säker delay funktion
 void delay_ms_safe(uint16_t ms) {
     while (ms--) {
@@ -290,14 +291,65 @@ Ad* get_first_ad_for_customer(Customer* customer) {
 }
 
 
-// växla mellan kunder baserat på tid
+/*// växla mellan kunder baserat på tid
 uint8_t get_next_customer_index(uint8_t current_index) {
     return (current_index + 1) % customer_count;
+}
+*/
+
+uint8_t is_even_minute_for_slot() {
+    static uint16_t slot_counter = 0;
+    uint8_t is_even = ((slot_counter / 3) % 2 == 0);
+    slot_counter++;
+    return is_even;
+}
+
+uint8_t count_valid_Ads(Customer * customer, uint8_t is_even_minute) {
+    uint8_t count = 0;
+
+    for (uint8_t i = 0;i < customer->ad_count; i++) {
+        if (ad_rule_matches(&customer->ads[i], is_even_minute)) {
+            count++;
+        }
+    }
+
+    return count;
+}
+
+Ad* pick_ad_for_customer(Customer * customer, uint8_t is_even_minute) {
+    uint8_t valid_count = count_valid_Ads(customer, is_even_minute);
+
+    if (valid_count == 0) {
+        return &customer->ads[0]; // ingen giltig annons
+    }
+
+    uint8_t target = rand() % valid_count;
+    uint8_t current = 0;
+
+    for (uint8_t i = 0; i < customer->ad_count; i++) {
+        if (ad_rule_matches(&customer->ads[i], is_even_minute)) {
+            if (current == target) {
+                return &customer->ads[i];
+            }
+            current++;
+        }
+    }
+
+    return &customer->ads[0]; // fallback
 }
 
 //visar annons för en kund baserat på kundslot
 void run_customer_slot(uint8_t customer_index) {
-    Ad* ad = get_first_ad_for_customer(&customers[customer_index]);
+    //visa kundnamn
+    lcd_clear();
+    lcd_set_cursor(0, 0);
+    lcd_print(customers[customer_index].name);
+    delay_ms_safe(3000);
+    
+    uint8_t is_even_minute = is_even_minute_for_slot();
+    //visar annonsen för kunden
+    Ad* ad = pick_ad_for_customer(&customers[customer_index], is_even_minute);
+    
     show_ad(ad);
     wait_slot_20s();
 }
@@ -337,11 +389,13 @@ uint8_t pick_weighted_customer_no_repeat() {
     return picked;
 }
 
+
 //löggning av scheduler steg, plockar kund och visar annons
 void run_scheduler_step() {
     current_customer_index = pick_weighted_customer_no_repeat();
     run_customer_slot(current_customer_index);
     last_customer_index = current_customer_index;
+    
 }
 
 
