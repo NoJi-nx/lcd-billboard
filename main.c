@@ -1,6 +1,7 @@
 #define F_CPU 16000000UL
 #include <avr/io.h>
 #include <util/delay.h>
+#include <stdlib.h>
 
 // mappar LCD pins till MCU pins
 #define LCD_RS PD2
@@ -316,9 +317,25 @@ uint8_t get_total_weight() {
     }
     return total;
 }
+//helper funktion, plockar kund baserat på viktad randomisering
+uint8_t pick_weighted_customer() {
+    uing8_t total_weight = get_total_weight();
+    uint8_t r = rand() % total_weight;
+
+    uint8_t cumulative = 0;
+
+    for (uint8_t i = 0; i < customer_count; i++) {
+        cumulative += customers[i].weight;
+        if (r < cumulative) {
+            return i;
+        }
+    }
+    return 0; // fallback
+}
 
 //main funktionen
 int main(void) {
+    srand(42); // seed för viktad randomisering
     //setup
     lcd_pins_init();
     lcd_init();

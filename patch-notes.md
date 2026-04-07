@@ -1,6 +1,29 @@
 # Patch- Notes
 
-## Part 5
+```C
+```
+
+## Part 5 
+
+#### 5.2 Ny helper funktion, plockar kund på viktad randomisering
+
+```C
+//helper funktion, plockar kund baserat på viktad randomisering
+uint8_t pick_weighted_customer() {
+    uing8_t total_weight = get_total_weight();
+    uint8_t r = rand() % total_weight;
+
+    uint8_t cumulative = 0;
+
+    for (uint8_t i = 0; i < customer_count; i++) {
+        cumulative += customers[i].weight;
+        if (r < cumulative) {
+            return i;
+        }
+    }
+    return 0; // fallback
+}
+```
 
 #### 5.1 Helper funktion för beräkna vikten + bestämma vikt
 
