@@ -284,18 +284,18 @@ void wait_slot_20s() {
     delay_ms_safe(5000);
 }
 
-//helper funktion, få första annonsen för en kund
+// få första annonsen för en kund
 Ad* get_first_ad_for_customer(Customer* customer) {
     return &customer->ads[0];
 }
 
 
-//scheduler funktion, växla mellan kunder baserat på tid
+// växla mellan kunder baserat på tid
 uint8_t get_next_customer_index(uint8_t current_index) {
     return (current_index + 1) % customer_count;
 }
 
-//funkion, visar annons för en kund baserat på kundslot
+//visar annons för en kund baserat på kundslot
 void run_customer_slot(uint8_t customer_index) {
     Ad* ad = get_first_ad_for_customer(&customers[customer_index]);
     show_ad(ad);
@@ -304,12 +304,11 @@ void run_customer_slot(uint8_t customer_index) {
 
 //scheduler funktion för steg, växla mellan kunder och annonser
 void run_scheduler_step() {
-    run_customer_slot(current_customer_index);
-    last_customer_index = current_customer_index;
-    current_customer_index = get_next_customer_index(current_customer_index);
+    current_customer_index = pick_weighted_customer_no_repeat();
+    run_customer
 }
 
-//helper funktion, räknar total vikt av alla kunder
+//räknar total vikt av alla kunder
 uint8_t get_total_weight() {
     uint8_t total = 0;
     for (uint8_t i = 0; i < customer_count; i++) {
@@ -317,7 +316,7 @@ uint8_t get_total_weight() {
     }
     return total;
 }
-//helper funktion, plockar kund baserat på viktad randomisering
+//plockar kund baserat på viktad randomisering
 uint8_t pick_weighted_customer() {
     uing8_t total_weight = get_total_weight();
     uint8_t r = rand() % total_weight;
@@ -331,6 +330,16 @@ uint8_t pick_weighted_customer() {
         }
     }
     return 0; // fallback
+}
+
+//ingen repetition av kund
+uint8_t pick_weighted_customer_no_repeat() {
+    uint8_t picked;
+
+    do{
+        picked = pick_weighted_customer();
+    } while (picked == last_customer_index);
+    return picked;
 }
 
 //main funktionen

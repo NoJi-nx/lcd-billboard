@@ -5,7 +5,21 @@
 
 ## Part 5 
 
-#### 5.2 Ny helper funktion, plockar kund på viktad randomisering
+#### 5.3 Ny helper funktion, ingen repetition
+
+```C
+//ingen repetition av kund
+uint8_t pick_weighted_customer_no_repeat() {
+    uint8_t picked;
+
+    do{
+        picked = pick_weighted_customer();
+    } while (picked == last_customer_index);
+    return picked;
+}
+```
+
+#### 5.2 Ny helper funktion, plockar kund på viktad randomisering + seed
 
 ```C
 //helper funktion, plockar kund baserat på viktad randomisering
@@ -24,6 +38,16 @@ uint8_t pick_weighted_customer() {
     return 0; // fallback
 }
 ```
+
+```C
+int main(void) {
+    srand(42); // seed för viktad randomisering
+    //setup
+    lcd_pins_init();
+    lcd_init();
+
+```
+
 
 #### 5.1 Helper funktion för beräkna vikten + bestämma vikt
 
