@@ -115,6 +115,7 @@ void lcd_clear() {
 void show_static(const char* text, uint16_t duration_ms);
 void show_scroll(const char* text, uint16_t step_delay_ms);
 void show_blink(const char* text, uint16_t total_duration_ms, uint16_t blink_interval_ms);
+void show_scroll_for_slot(const char* text, uint16_t total_duration_ms, uint16_t step_delay_ms);
 
 
 
@@ -254,18 +255,43 @@ Customer customers [] = {
 const uint8_t customer_count = sizeof(customers) / sizeof(customers[0]);
 
 //visar annons baserat på dess visning
-void show_ad(const Ad* ad) {
+void show_ad(const Ad* ad, uint16_t slot_ms) {
     switch (ad->mode) {
         case MODE_STATIC:
-            show_static(ad->text, 2000);
+            show_static(ad->text, slot_ms);
             break;
         case MODE_SCROLL:
-            show_scroll(ad->text, 200);
+            show_scroll_for_slot(ad->text, slot_ms, 200);
             break;
         case MODE_BLINK:
-            show_blink(ad->text, 5000, 500);
+            show_blink(ad->text, slot_ms, 500);
             break;
     }
+
+
+/*
+
+    if (len <= 16) {
+        show_static(text, slot_ms);
+        return;
+    }
+
+    uint16_t elapsed = 0;
+    uint8_t start = 0;
+
+    while (elapsed < slot_ms) {
+        lcd_clear();
+        lcd_set_cursor(0,0);
+
+        for (uint8_t i = 0; i < 16; i++) {
+            lcd_data(text[(start + i) % len]);
+        }
+
+        delay_ms_safe(step_delay_ms);
+        elapsed += step_delay_ms;
+        start++;
+    }
+        */
 }
 
 //kontrollerar om annonsen matchar regler
@@ -280,15 +306,8 @@ uint8_t ad_rule_matches(const Ad* ad, uint8_t is_even_minute) {
 int8_t current_customer_index = 0;
 int8_t last_customer_index = -1;
 
-//vänta i 20 sekunder innan nästa annons visas
-void wait_slot_20s() {
-    delay_ms_safe(5000);
-}
 
-// få första annonsen för en kund
-Ad* get_first_ad_for_customer(Customer* customer) {
-    return &customer->ads[0];
-}
+
 
 
 /*// växla mellan kunder baserat på tid
@@ -350,8 +369,7 @@ void run_customer_slot(uint8_t customer_index) {
     //visar annonsen för kunden
     Ad* ad = pick_ad_for_customer(&customers[customer_index], is_even_minute);
     
-    show_ad(ad);
-    wait_slot_20s();
+    show_ad(ad, 5000);
 }
 
 
@@ -398,6 +416,33 @@ void run_scheduler_step() {
     
 }
 
+void show_scroll_for_slot(const char* text, uint16_t total_duration_ms, uint16_t step_delay_ms) {
+    uint8_t len = string_length(text);
+    uint16_t elapsed = 0;
+
+    if ( len <= 16) {
+        show_static(text, total_duration_ms);
+        return;
+    } 
+
+    while (elapsed < total_duration_ms) {
+        for (uint8_t start = 0; start <= len - 16; start++) {
+            lcd_clear();
+            lcd_set_cursor(0,0);
+
+            for (uint8_t i = 0; i < 16; i++) {
+                lcd_data(text[start + i]);
+            }
+
+            delay_ms_safe(step_delay_ms);
+            elapsed += step_delay_ms;
+
+            if (elapsed >= total_duration_ms) {
+                return;
+            }
+        }
+    }
+}
 
 //main funktionen
 int main(void) {

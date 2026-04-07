@@ -9,9 +9,9 @@
 
 ```C
 int8_t is_even_minute_for_slot() {
-    static uint16_t slot_counter = 0;
-    uint8_t is_even = ((slot_counter / 3) % 2 == 0);
-    slot_counter++;
+    static uint32_t elapsed_seconds = 0;
+    uint8_t is_even = ((elapsed_seconds / 60) % 2 == 0);
+    elapsed_seconds += 20;
     return is_even;
 }
 
