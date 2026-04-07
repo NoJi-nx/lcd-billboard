@@ -302,11 +302,6 @@ void run_customer_slot(uint8_t customer_index) {
     wait_slot_20s();
 }
 
-//scheduler funktion för steg, växla mellan kunder och annonser
-void run_scheduler_step() {
-    current_customer_index = pick_weighted_customer_no_repeat();
-    run_customer
-}
 
 //räknar total vikt av alla kunder
 uint8_t get_total_weight() {
@@ -318,7 +313,7 @@ uint8_t get_total_weight() {
 }
 //plockar kund baserat på viktad randomisering
 uint8_t pick_weighted_customer() {
-    uing8_t total_weight = get_total_weight();
+    uint8_t total_weight = get_total_weight();
     uint8_t r = rand() % total_weight;
 
     uint8_t cumulative = 0;
@@ -342,12 +337,20 @@ uint8_t pick_weighted_customer_no_repeat() {
     return picked;
 }
 
+//löggning av scheduler steg, plockar kund och visar annons
+void run_scheduler_step() {
+    current_customer_index = pick_weighted_customer_no_repeat();
+    run_customer_slot(current_customer_index);
+    last_customer_index = current_customer_index;
+}
+
+
 //main funktionen
 int main(void) {
-    srand(42); // seed för viktad randomisering
     //setup
     lcd_pins_init();
     lcd_init();
+    srand(42); // seed för viktad randomisering
 
     //intro text som visar på LCD
     lcd_print("Billboard");

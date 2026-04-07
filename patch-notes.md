@@ -5,6 +5,17 @@
 
 ## Part 5 
 
+#### 5.4 Uppdatering av scheduler steg funktionen
+
+```C
+//löggning av scheduler steg, plockar kund och visar annons
+void run_scheduler_step() {
+    current_customer_index = pick_weighted_customer_no_repeat();
+    run_customer_slot(current_customer_index);
+    last_customer_index = current_customer_index;
+}
+```
+
 #### 5.3 Ny helper funktion, ingen repetition
 
 ```C
