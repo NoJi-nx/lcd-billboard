@@ -1,5 +1,31 @@
 # Patch- Notes
 
+## Part 5
+
+#### 5.1 Helper funktion för beräkna vikten + bestämma vikt
+
+```C
+//exempeldata för kunder, varje kund har en vikt och lista av annonser
+Customer customers [] = {
+    {"Harrys bilar", 5, harry_ads, 3},
+    {"Farmor Anka", 3, grandma_ads, 2},
+    {"Petter Svartbyggen", 2, petter_ads, 2},
+    {"Langbens detektivbyra", 4, goofy_ads, 2},
+    {"Reklambyra", 1, commercial_ads, 1}
+};
+```
+
+```C
+//helper funktion, räknar total vikt av alla kunder
+uint8_t get_total_weight() {
+    uint8_t total = 0;
+    for (uint8_t i = 0; i < customer_count; i++) {
+        total += customers[i].weight;
+    }
+    return total;
+}
+```
+
 ## Part 4
 
 #### 4.4 Ny scheduler funktion för steg i schemaläggning + main uppdatering

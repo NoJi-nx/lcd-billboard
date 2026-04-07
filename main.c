@@ -212,40 +212,40 @@ typedef struct {
 
 //exempeldata för annonser
 Ad harry_ads[] = {
-    {"Köp bil hos Harry", MODE_SCROLL, RULE_NONE},
-    {"En god bilaffär (för Harry!)", MODE_STATIC, RULE_NONE},
+    {"Kop bil hos Harry", MODE_SCROLL, RULE_NONE},
+    {"En god bilaffar (for Harry!)", MODE_STATIC, RULE_NONE},
     {"Hederlige Harrys Bilar", MODE_BLINK, RULE_NONE}
 
 };
 
 Ad grandma_ads[] = {
-    {"Köp paj hos Farmor Anka", MODE_SCROLL, RULE_NONE},
-    {"Skynda innan Mårten ätit alla pajer", MODE_STATIC, RULE_NONE}
+    {"Kop paj hos Farmor Anka", MODE_SCROLL, RULE_NONE},
+    {"Skynda innan Marten atit alla pajer", MODE_STATIC, RULE_NONE}
 };
 
 Ad petter_ads[] = {
-    {"Låt Petter bygga åt dig", MODE_SCROLL, RULE_EVEN_MINUTE},
+    {"Lat Petter bygga at dig", MODE_SCROLL, RULE_EVEN_MINUTE},
     {"Bygga svart? Ring Petter", MODE_STATIC, RULE_ODD_MINUTE}
 
 };
 
 Ad goofy_ads[] = {
-    {"Mysterier? Ring Långben", MODE_STATIC, RULE_NONE},
-    {"Långben fixar biffen", MODE_STATIC, RULE_NONE}
+    {"Mysterier? Ring Langben", MODE_STATIC, RULE_NONE},
+    {"Langben fixar biffen", MODE_STATIC, RULE_NONE}
 
 };
 
 Ad commercial_ads[] = {
-    {"Synas här? IOT:s Reklambyrå", MODE_STATIC, RULE_NONE}
+    {"Synas har? IOT:s Reklambyra", MODE_STATIC, RULE_NONE}
 };
 
-//skapar kunder och deras annonser
+//exempeldata för kunder, varje kund har en vikt och lista av annonser
 Customer customers [] = {
-    {"Harrys bilar", 5000, harry_ads, 3},
-    {"Farmor Anka", 3000, grandma_ads, 2},
-    {"Petter Svartbyggen", 1500, petter_ads, 2},
-    {"Långbens detektivbyrå", 4000, goofy_ads, 2},
-    {"Reklambyrå", 1000, commercial_ads, 1}
+    {"Harrys bilar", 5, harry_ads, 3},
+    {"Farmor Anka", 3, grandma_ads, 2},
+    {"Petter Svartbyggen", 2, petter_ads, 2},
+    {"Langbens detektivbyra", 4, goofy_ads, 2},
+    {"Reklambyra", 1, commercial_ads, 1}
 };
 
 //räknar antal kunder
@@ -280,7 +280,7 @@ int8_t last_customer_index = -1;
 
 //vänta i 20 sekunder innan nästa annons visas
 void wait_slot_20s() {
-    delay_ms_safe(20000);
+    delay_ms_safe(5000);
 }
 
 //helper funktion, få första annonsen för en kund
@@ -308,13 +308,22 @@ void run_scheduler_step() {
     current_customer_index = get_next_customer_index(current_customer_index);
 }
 
+//helper funktion, räknar total vikt av alla kunder
+uint8_t get_total_weight() {
+    uint8_t total = 0;
+    for (uint8_t i = 0; i < customer_count; i++) {
+        total += customers[i].weight;
+    }
+    return total;
+}
+
 //main funktionen
 int main(void) {
     //setup
     lcd_pins_init();
     lcd_init();
 
-    //text som visar på LCD
+    //intro text som visar på LCD
     lcd_print("Billboard");
     lcd_set_cursor(0,1);
     lcd_print("Online");
