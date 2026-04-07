@@ -3,7 +3,7 @@
 #include <util/delay.h>
 #include <stdlib.h>
 
-// mappar LCD pins till MCU pins
+// appar LCD pins till MCU pins
 #define LCD_RS PD2
 #define LCD_E PD3
 #define LCD_D4 PD4
@@ -11,8 +11,8 @@
 #define LCD_D6 PD6
 #define LCD_D7 PD7
 
-
-#define CUSTOMER_NAME_TIME_MS 1000
+//tider för olika visningslägen
+#define CUSTOMER_NAME_TIME_MS 1900
 #define SLOT_TIME_MS 20000    
 #define SCROLL_STEP_MS 200
 #define BLINK_INTERVAL_MS 500
@@ -394,7 +394,7 @@ uint8_t pick_weighted_customer_no_repeat() {
 }
 
 
-//löggning av scheduler steg, plockar kund och visar annons
+//läggning av scheduler steg, plockar kund och visar annons
 void run_scheduler_step() {
     current_customer_index = pick_weighted_customer_no_repeat();
     run_customer_slot(current_customer_index);
