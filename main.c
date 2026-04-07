@@ -119,7 +119,6 @@ void lcd_clear() {
 
 //display funktion deklarationer
 void show_static(const char* text, uint16_t duration_ms);
-void show_scroll(const char* text, uint16_t step_delay_ms);
 void show_blink(const char* text, uint16_t total_duration_ms, uint16_t blink_interval_ms);
 void show_scroll_for_slot(const char* text, uint16_t total_duration_ms, uint16_t step_delay_ms);
 
@@ -151,23 +150,31 @@ uint8_t string_length(const char* str) {
 }
 
 //visar scrollande text, implementera scrollande läge
-void show_scroll(const char* text, uint16_t step_delay_ms) {
+void show_scroll_for_slot(const char* text, uint16_t total_duration_ms, uint16_t step_delay_ms) {
     uint8_t len = string_length(text);
+    uint16_t elapsed = 0;
 
-    if (len <= 16) {
-        show_static(text, 2000);
+    if ( len <= 16) {
+        show_static(text, total_duration_ms);
         return;
-    }
+    } 
 
-    for (uint8_t start = 0; start <= len - 16; start++) {
-        lcd_clear();
-        lcd_set_cursor(0,0);
+    while (elapsed < total_duration_ms) {
+        for (uint8_t start = 0; start <= len - 16; start++) {
+            lcd_clear();
+            lcd_set_cursor(0,0);
 
-        for (uint8_t i = 0; i < 16; i++) {
-            lcd_data(text[start + i]);
+            for (uint8_t i = 0; i < 16; i++) {
+                lcd_data(text[start + i]);
+            }
+
+            delay_ms_safe(step_delay_ms);
+            elapsed += step_delay_ms;
+
+            if (elapsed >= total_duration_ms) {
+                return;
+            }
         }
-
-        delay_ms_safe(step_delay_ms);
     }
 }
 
@@ -238,7 +245,7 @@ Ad petter_ads[] = {
 
 };
 
-Ad goofy_ads[] = {
+Ad langben_ads[] = {
     {"Mysterier? Ring Langben", MODE_STATIC, RULE_NONE},
     {"Langben fixar biffen", MODE_STATIC, RULE_NONE}
 
@@ -249,11 +256,11 @@ Ad commercial_ads[] = {
 };
 
 //exempeldata för kunder, varje kund har en vikt och lista av annonser
-Customer customers [] = {
+Customer customers[] = {
     {"Harrys bilar", 5, harry_ads, 3},
     {"Farmor Anka", 3, grandma_ads, 2},
     {"Petter Svartbyggen", 2, petter_ads, 2},
-    {"Langbens detektivbyra", 4, goofy_ads, 2},
+    {"Langbens detektivbyra", 4, langben_ads, 2},
     {"Reklambyra", 1, commercial_ads, 1}
 };
 
@@ -376,6 +383,8 @@ uint8_t pick_weighted_customer() {
 
 //ingen repetition av kund
 uint8_t pick_weighted_customer_no_repeat() {
+    if (customer_count <= 1) return 0; // bara en kund, ingen repetition
+    
     uint8_t picked;
 
     do{
@@ -391,34 +400,6 @@ void run_scheduler_step() {
     run_customer_slot(current_customer_index);
     last_customer_index = current_customer_index;
     
-}
-
-void show_scroll_for_slot(const char* text, uint16_t total_duration_ms, uint16_t step_delay_ms) {
-    uint8_t len = string_length(text);
-    uint16_t elapsed = 0;
-
-    if ( len <= 16) {
-        show_static(text, total_duration_ms);
-        return;
-    } 
-
-    while (elapsed < total_duration_ms) {
-        for (uint8_t start = 0; start <= len - 16; start++) {
-            lcd_clear();
-            lcd_set_cursor(0,0);
-
-            for (uint8_t i = 0; i < 16; i++) {
-                lcd_data(text[start + i]);
-            }
-
-            delay_ms_safe(step_delay_ms);
-            elapsed += step_delay_ms;
-
-            if (elapsed >= total_duration_ms) {
-                return;
-            }
-        }
-    }
 }
 
 //main funktionen
