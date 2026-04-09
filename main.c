@@ -342,11 +342,6 @@ Ad* pick_ad_for_customer(Customer * customer, uint8_t is_even_minute) {
 
 //visar annons för en kund baserat på kundslot
 void run_customer_slot(uint8_t customer_index) {
-    //visa kundnamn
-    lcd_clear();
-    lcd_set_cursor(0, 0);
-    lcd_print(customers[customer_index].name);
-    delay_ms_safe(CUSTOMER_NAME_TIME_MS);
     
     uint8_t is_even_minute = is_even_minute_for_slot();
     //visar annonsen för kunden
